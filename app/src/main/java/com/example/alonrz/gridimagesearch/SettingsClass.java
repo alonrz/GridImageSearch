@@ -7,7 +7,18 @@ import java.io.Serializable;
  */
 public class SettingsClass implements Serializable {
     private String imageSize, colorFilter, imageType, siteFilter;
+    private static SettingsClass mSettings;
 
+    private SettingsClass() {
+
+    }
+
+    public static SettingsClass getInstance() {
+        if(mSettings == null)
+            mSettings = new SettingsClass();
+
+        return mSettings;
+    }
     public String getImageSize() {
         return imageSize;
     }
