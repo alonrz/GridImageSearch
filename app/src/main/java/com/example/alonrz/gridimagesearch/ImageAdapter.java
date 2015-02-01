@@ -1,12 +1,17 @@
 package com.example.alonrz.gridimagesearch;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 
@@ -16,9 +21,15 @@ import java.util.ArrayList;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<String> mImageUrls;
+    WindowManager wm;
+    Display display;
+
     public ImageAdapter(Context c, ArrayList<String> imagesUrls) {
         mContext = c;
         mImageUrls = imagesUrls;
+        wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        display = wm.getDefaultDisplay();
+
     }
 
     public int getCount() {
@@ -49,11 +60,37 @@ public class ImageAdapter extends BaseAdapter {
 
         Picasso.with(mContext)
                 .load(mImageUrls.get(position))
-                .resize(mContext.getResources().getDisplayMetrics().widthPixels/3, 200)
+                .transform(new SameRatioTransformation())
                 .into(imageView);
 
 
         return imageView;
+    }
+
+    public class SameRatioTransformation implements Transformation {
+        @Override
+        public Bitmap transform(Bitmap source) {
+
+            Point size = new Point();
+            display.getSize(size);
+            int targetWidth = size.x/2;
+
+            double ratio = (double)source.getHeight() / (double)source.getWidth();
+
+            int targetHeight = (int) (targetWidth * ratio);
+            Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+            if (result != source) {
+                // Same bitmap is returned if sizes are the same
+                source.recycle();
+            }
+            return result;
+
+        }
+
+        @Override
+        public String key() {
+            return null;
+        }
     }
 
 }

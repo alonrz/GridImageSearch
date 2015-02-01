@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -28,7 +28,7 @@ public class PicturesActivity extends ActionBarActivity {
     public static final String BASE_SEARCH_URL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8";
     private final int REQUEST_CODE = 888;
 
-    private GridView gvImages;
+    private StaggeredGridView gvImages;
     private ArrayList<String> mImagesUrls;
     private ImageAdapter adapter;
     private SettingsClass settings;
@@ -38,8 +38,8 @@ public class PicturesActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pictures);
-        this.settings = new SettingsClass();
-        gvImages = (GridView)findViewById(R.id.gvImages);
+        this.settings = SettingsClass.getInstance();
+        gvImages = (StaggeredGridView)findViewById(R.id.gvImages);
         mImagesUrls = new ArrayList<>();
         adapter = new ImageAdapter(this, mImagesUrls);
         gvImages.setAdapter(adapter);
@@ -64,8 +64,8 @@ public class PicturesActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE)
         {
-            this.settings = (SettingsClass)data.getSerializableExtra("settings");
-            Toast.makeText(this, "Object settings returned", Toast.LENGTH_LONG).show();
+            this.settings = (SettingsClass) data.getSerializableExtra("settings");
+            Toast.makeText(this, settings.toString(), Toast.LENGTH_LONG).show();
         }
     }
 

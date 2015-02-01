@@ -10,7 +10,7 @@ public class SettingsClass implements Serializable {
     private static SettingsClass mSettings;
 
     private SettingsClass() {
-
+        imageSize = colorFilter = imageType = siteFilter = "";
     }
 
     public static SettingsClass getInstance() {
@@ -49,5 +49,13 @@ public class SettingsClass implements Serializable {
 
     public void setSiteFilter(String siteFilter) {
         this.siteFilter = siteFilter;
+    }
+
+    @Override
+    public String toString() {
+        return "Settings --> image size: " + getImageSize() +
+                ",color filter: " + getColorFilter() +
+                ",image type: " + getImageType() +
+                ",site filter: " + getSiteFilter();
     }
 }
