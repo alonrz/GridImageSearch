@@ -9,12 +9,12 @@ import com.ortiz.touch.TouchImageView;
 import com.squareup.picasso.Picasso;
 
 
-public class ShowImageActivity extends ActionBarActivity {
+public class ImageActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_image);
+        setContentView(R.layout.activity_image);
         String imageUrl = getIntent().getStringExtra("url");
         TouchImageView img = (TouchImageView) findViewById(R.id.ivImage);
         Picasso.with(this)
@@ -28,7 +28,7 @@ public class ShowImageActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_show_image, menu);
+        getMenuInflater().inflate(R.menu.menu_image, menu);
         return true;
     }
 

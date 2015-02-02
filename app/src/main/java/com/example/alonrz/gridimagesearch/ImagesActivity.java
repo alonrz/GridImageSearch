@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class PicturesActivity extends ActionBarActivity {
+public class ImagesActivity extends ActionBarActivity {
 
     public static final String BASE_SEARCH_URL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8";
     public static final String FILTER_IMG_SIZE = "&imgsz=";
@@ -61,7 +61,7 @@ public class PicturesActivity extends ActionBarActivity {
 
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Intent i = new Intent(getApplicationContext(), ShowImageActivity.class);
+                Intent i = new Intent(getApplicationContext(), ImageActivity.class);
                 i.putExtra("url", mImagesUrls.get(position));
                 startActivity(i);
             }
