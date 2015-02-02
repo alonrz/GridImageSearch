@@ -44,7 +44,7 @@ public class ImagesActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pictures);
+        setContentView(R.layout.activity_images);
         this.settings = SettingsClass.getInstance();
         gvImages = (StaggeredGridView)findViewById(R.id.gvImages);
         gvImages.setOnScrollListener(new EndlessScrollListener() {
