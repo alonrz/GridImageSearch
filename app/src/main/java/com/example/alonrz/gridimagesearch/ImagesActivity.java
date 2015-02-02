@@ -91,8 +91,8 @@ public class ImagesActivity extends ActionBarActivity {
 
                 searchString = "&q=" + s;
                 mImagesUrls.clear();
-                adapter.notifyDataSetChanged();
-                onImageSearch(0);
+                if(onImageSearch(0))
+                    adapter.notifyDataSetChanged();
 
                 return true;
             }
@@ -110,8 +110,8 @@ public class ImagesActivity extends ActionBarActivity {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SETTINGS)
         {
             this.settings = (SettingsClass) data.getSerializableExtra("settings");
-            onImageSearch(0);
-            adapter.notifyDataSetChanged();
+            if(onImageSearch(0))
+                adapter.notifyDataSetChanged();
         }
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SEARCH) {
             searchView.setQuery(data.getExtras().getString("queryString"),true);
@@ -140,7 +140,9 @@ public class ImagesActivity extends ActionBarActivity {
      * This method will NOT clear the image array and is used to add more queries with new cursor position.
      * @param cursorStart
      */
-    private void onImageSearch(int cursorStart) {
+    private boolean onImageSearch(int cursorStart) {
+        if(searchString == null || searchString.isEmpty())
+            return false;
         searchString = addQueryArgs(searchString, cursorStart);
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -158,9 +160,12 @@ public class ImagesActivity extends ActionBarActivity {
                 Log.e("PicturesActivity", "JSON failed to return from internet");
             }
         });
+        return true;
     }
 
     private String addQueryArgs(String searchString, int cursorStart) {
+        if(searchString.isEmpty())
+            return "";
         StringBuilder builder = new StringBuilder(searchString);
         if(settings.getImageSize().isEmpty() == false)
             builder.append(FILTER_IMG_SIZE).append(settings.getImageSize());

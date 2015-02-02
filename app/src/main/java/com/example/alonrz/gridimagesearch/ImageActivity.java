@@ -31,6 +31,9 @@ public class ImageActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         imageUrl = getIntent().getStringExtra("url");
         ivImage = (TouchImageView) findViewById(R.id.ivImage);
         Picasso.with(this)
@@ -92,7 +95,11 @@ public class ImageActivity extends ActionBarActivity {
                 startActivity(Intent.createChooser(shareIntent, "Share Image Using"));
                 return true;
         }
-
+        if(item.getItemId() == android.R.id.home)
+        {
+            this.finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
