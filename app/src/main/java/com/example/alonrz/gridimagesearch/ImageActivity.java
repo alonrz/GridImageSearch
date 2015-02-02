@@ -1,7 +1,12 @@
 package com.example.alonrz.gridimagesearch;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +14,10 @@ import android.widget.ImageView;
 
 import com.ortiz.touch.TouchImageView;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class ImageActivity extends ActionBarActivity {
@@ -42,19 +51,47 @@ public class ImageActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        ImageView ivImage = (ImageView) findViewById(R.id.ivImage);
+        Uri bitmapUri = getLocalBitmapUri(ivImage);
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("text/html");
+        if (id == R.id.action_share && bitmapUri != null) {
 
-            i.putExtra(Intent.EXTRA_TEXT, imageUrl);
-
-            startActivity(Intent.createChooser(i, "Share image using"));
-            return true;
+                // Construct a ShareIntent with link to image
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                shareIntent.setType("image/*");
+                // Launch sharing dialog for image
+                startActivity(Intent.createChooser(shareIntent, "Share Image Using"));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Returns the URI path to the Bitmap displayed in specified ImageView
+    public Uri getLocalBitmapUri(ImageView imageView) {
+        // Extract Bitmap from ImageView drawable
+        Drawable drawable = imageView.getDrawable();
+        Bitmap bmp = null;
+        if (drawable instanceof BitmapDrawable){
+            bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        } else {
+            return null;
+        }
+        // Store image to default external storage directory
+        Uri bmpUri = null;
+        try {
+            File file =  new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
+            file.getParentFile().mkdirs();
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            bmpUri = Uri.fromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
     }
 }
