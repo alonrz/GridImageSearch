@@ -61,6 +61,7 @@ public class ImageAdapter extends BaseAdapter {
         Picasso.with(mContext)
                 .load(mImageUrls.get(position))
                 .transform(new SameRatioTransformation())
+                .placeholder(R.drawable.loading_image)
                 .into(imageView);
 
 

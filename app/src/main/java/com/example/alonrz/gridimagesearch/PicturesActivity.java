@@ -45,6 +45,17 @@ public class PicturesActivity extends ActionBarActivity {
         setContentView(R.layout.activity_pictures);
         this.settings = SettingsClass.getInstance();
         gvImages = (StaggeredGridView)findViewById(R.id.gvImages);
+        gvImages.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+
+                if(page>=8) //Google search only supports upto 8 pages of seach.
+                    return;
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+                onImageSearch(page);
+            }
+        });
         mImagesUrls = new ArrayList<>();
         adapter = new ImageAdapter(this, mImagesUrls);
         gvImages.setAdapter(adapter);
@@ -99,13 +110,9 @@ public class PicturesActivity extends ActionBarActivity {
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS );
 
         mImagesUrls.clear();
+        adapter.notifyDataSetChanged();
         int cursorStart = 0;
-
-        for(int i=0; i<8; i++) {
-            onImageSearch(cursorStart);
-            cursorStart += (i * 8);
-        }
-
+        onImageSearch(cursorStart);
     }
 
     /**
