@@ -1,5 +1,6 @@
 package com.example.alonrz.gridimagesearch;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,9 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
@@ -26,6 +27,10 @@ import java.util.ArrayList;
 public class PicturesActivity extends ActionBarActivity {
 
     public static final String BASE_SEARCH_URL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8";
+    public static final String FILTER_IMG_SIZE = "&imgsz=";
+    public static final String FILTER_IMG_COLOR = "&imgcolor=";
+    public static final String FILTER_IMG_TYPE = "&imgtype=";
+    public static final String CURSOR_POSITION = "&start=";
     private final int REQUEST_CODE = 888;
 
     private StaggeredGridView gvImages;
@@ -65,7 +70,8 @@ public class PicturesActivity extends ActionBarActivity {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE)
         {
             this.settings = (SettingsClass) data.getSerializableExtra("settings");
-            Toast.makeText(this, settings.toString(), Toast.LENGTH_LONG).show();
+            onImageSearch(0);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -87,21 +93,38 @@ public class PicturesActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public void onImageSearch(View view) {
+        //Calling a method without the view object when its not used.
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS );
+
+        mImagesUrls.clear();
+        int cursorStart = 0;
+
+        for(int i=0; i<8; i++) {
+            onImageSearch(cursorStart);
+            cursorStart += (i * 8);
+        }
+
+    }
+
+    /**
+     * This method will NOT clear the image array and is used to add more queries with new cursor position.
+     * @param cursorStart
+     */
+    private void onImageSearch(int cursorStart) {
         EditText etSearchString = (EditText) findViewById(R.id.etSearchString);
         String searchString = "&q=" + etSearchString.getText().toString();
+
+        searchString = addQueryArgs(searchString, cursorStart);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(BASE_SEARCH_URL + searchString, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.i("PicturesActivity", "JSON returned successfuly from internet");
+                Log.i("PicturesActivity", "JSON received successfully");
                 loadImagesFromJson(response);
-
-
             }
 
             @Override
@@ -110,12 +133,24 @@ public class PicturesActivity extends ActionBarActivity {
                 Log.e("PicturesActivity", "JSON failed to return from internet");
             }
         });
+    }
 
+    private String addQueryArgs(String searchString, int cursorStart) {
+        StringBuilder builder = new StringBuilder(searchString);
+        if(settings.getImageSize().isEmpty() == false)
+            builder.append(FILTER_IMG_SIZE).append(settings.getImageSize());
+        if(settings.getColorFilter().isEmpty() == false)
+            builder.append(FILTER_IMG_COLOR).append(settings.getColorFilter());
+        if(settings.getImageType().isEmpty() == false)
+            builder.append(FILTER_IMG_TYPE).append(settings.getImageType());
+
+        builder.append(CURSOR_POSITION).append(cursorStart);
+
+        return builder.toString();
     }
 
     private void loadImagesFromJson(JSONObject response)
     {
-        mImagesUrls.clear();
         try {
             //responseData --> @results --> url
             JSONArray results = response.getJSONObject("responseData").getJSONArray("results");
