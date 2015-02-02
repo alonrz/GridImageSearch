@@ -6,6 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="action_share">Share</string>
+    <string name="title_activity_show_image">Image View</string>
+
     <string-array name="image_size">
         <item>Any</item>
         <item>Icon</item>
@@ -42,6 +44,6 @@
         <item>lineart</item>
     </string-array>
 
-    <string name="title_activity_show_image">ShowImageActivity</string>
+
 
 </resources>

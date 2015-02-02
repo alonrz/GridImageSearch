@@ -76,7 +76,7 @@ public class ImagesActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_pictures, menu);
+        getMenuInflater().inflate(R.menu.menu_images, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
 

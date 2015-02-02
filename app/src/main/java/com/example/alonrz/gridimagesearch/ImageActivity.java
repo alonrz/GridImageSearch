@@ -1,9 +1,11 @@
 package com.example.alonrz.gridimagesearch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.ortiz.touch.TouchImageView;
 import com.squareup.picasso.Picasso;
@@ -11,17 +13,18 @@ import com.squareup.picasso.Picasso;
 
 public class ImageActivity extends ActionBarActivity {
 
+    String imageUrl;
+    TouchImageView ivImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        String imageUrl = getIntent().getStringExtra("url");
-        TouchImageView img = (TouchImageView) findViewById(R.id.ivImage);
+        imageUrl = getIntent().getStringExtra("url");
+        ivImage = (TouchImageView) findViewById(R.id.ivImage);
         Picasso.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.loading_image)
-                .into(img);
-
+                .into(ivImage);
     }
 
 
@@ -39,8 +42,16 @@ public class ImageActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        ImageView ivImage = (ImageView) findViewById(R.id.ivImage);
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/html");
+
+            i.putExtra(Intent.EXTRA_TEXT, imageUrl);
+
+            startActivity(Intent.createChooser(i, "Share image using"));
             return true;
         }
 
