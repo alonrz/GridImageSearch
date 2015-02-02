@@ -32,7 +32,8 @@ public class ImagesActivity extends ActionBarActivity {
     public static final String FILTER_IMG_COLOR = "&imgcolor=";
     public static final String FILTER_IMG_TYPE = "&imgtype=";
     public static final String CURSOR_POSITION = "&start=";
-    private final int REQUEST_CODE = 888;
+    private final int REQUEST_CODE_SETTINGS = 888;
+    private final int REQUEST_CODE_SEARCH = 777;
 
     private StaggeredGridView gvImages;
     private ArrayList<String> mImagesUrls;
@@ -63,7 +64,7 @@ public class ImagesActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Intent i = new Intent(getApplicationContext(), ImageActivity.class);
                 i.putExtra("url", mImagesUrls.get(position));
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE_SEARCH);
             }
         });
 
@@ -91,8 +92,7 @@ public class ImagesActivity extends ActionBarActivity {
                 searchString = "&q=" + s;
                 mImagesUrls.clear();
                 adapter.notifyDataSetChanged();
-                int cursorStart = 0;
-                onImageSearch(cursorStart);
+                onImageSearch(0);
 
                 return true;
             }
@@ -107,11 +107,14 @@ public class ImagesActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE)
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SETTINGS)
         {
             this.settings = (SettingsClass) data.getSerializableExtra("settings");
             onImageSearch(0);
             adapter.notifyDataSetChanged();
+        }
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SEARCH) {
+            searchView.setQuery(data.getExtras().getString("queryString"),true);
         }
     }
 
@@ -126,7 +129,7 @@ public class ImagesActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SettingsActivity.class);
             i.putExtra("settings", this.settings);
-            startActivityForResult(i, REQUEST_CODE);
+            startActivityForResult(i, REQUEST_CODE_SETTINGS);
             return true;
         }
 
