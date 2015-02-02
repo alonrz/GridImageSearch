@@ -3,14 +3,15 @@ package com.example.alonrz.gridimagesearch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
@@ -37,7 +38,8 @@ public class PicturesActivity extends ActionBarActivity {
     private ArrayList<String> mImagesUrls;
     private ImageAdapter adapter;
     private SettingsClass settings;
-
+    private SearchView searchView;
+    private String searchString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,31 @@ public class PicturesActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_pictures, menu);
 
-        return true;
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                searchString = "&q=" + s;
+                mImagesUrls.clear();
+                adapter.notifyDataSetChanged();
+                int cursorStart = 0;
+                onImageSearch(cursorStart);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -107,25 +133,11 @@ public class PicturesActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onImageSearch(View view) {
-        //Calling a method without the view object when its not used.
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-        mImagesUrls.clear();
-        adapter.notifyDataSetChanged();
-        int cursorStart = 0;
-        onImageSearch(cursorStart);
-    }
-
     /**
      * This method will NOT clear the image array and is used to add more queries with new cursor position.
      * @param cursorStart
      */
     private void onImageSearch(int cursorStart) {
-        EditText etSearchString = (EditText) findViewById(R.id.etSearchString);
-        String searchString = "&q=" + etSearchString.getText().toString();
-
         searchString = addQueryArgs(searchString, cursorStart);
 
         AsyncHttpClient client = new AsyncHttpClient();
