@@ -56,15 +56,18 @@ public class PicturesActivity extends ActionBarActivity {
                 onImageSearch(page);
             }
         });
+
+        gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Intent i = new Intent(getApplicationContext(), ShowImageActivity.class);
+                i.putExtra("url", mImagesUrls.get(position));
+                startActivity(i);
+            }
+        });
+
         mImagesUrls = new ArrayList<>();
         adapter = new ImageAdapter(this, mImagesUrls);
         gvImages.setAdapter(adapter);
-        gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //What to do with a image clicked. Optional
-            }
-        });
     }
 
 
@@ -107,7 +110,7 @@ public class PicturesActivity extends ActionBarActivity {
     public void onImageSearch(View view) {
         //Calling a method without the view object when its not used.
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS );
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         mImagesUrls.clear();
         adapter.notifyDataSetChanged();
