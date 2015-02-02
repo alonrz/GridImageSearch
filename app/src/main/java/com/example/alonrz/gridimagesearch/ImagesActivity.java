@@ -31,6 +31,7 @@ public class ImagesActivity extends ActionBarActivity {
     public static final String FILTER_IMG_SIZE = "&imgsz=";
     public static final String FILTER_IMG_COLOR = "&imgcolor=";
     public static final String FILTER_IMG_TYPE = "&imgtype=";
+    public static final String FILTER_SITE = "&as_sitesearch=";
     public static final String CURSOR_POSITION = "&start=";
     private final int REQUEST_CODE_SETTINGS = 888;
     private final int REQUEST_CODE_SEARCH = 777;
@@ -114,7 +115,7 @@ public class ImagesActivity extends ActionBarActivity {
                 adapter.notifyDataSetChanged();
         }
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_SEARCH) {
-            searchView.setQuery(data.getExtras().getString("queryString"),true);
+            searchView.setQuery(data.getExtras().getString("queryString"), true);
         }
     }
 
@@ -143,10 +144,10 @@ public class ImagesActivity extends ActionBarActivity {
     private boolean onImageSearch(int cursorStart) {
         if(searchString == null || searchString.isEmpty())
             return false;
-        searchString = addQueryArgs(searchString, cursorStart);
+        String searchStringWithArgs = addQueryArgs(searchString, cursorStart);
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(BASE_SEARCH_URL + searchString, new JsonHttpResponseHandler() {
+        client.get(BASE_SEARCH_URL + searchStringWithArgs, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -173,9 +174,11 @@ public class ImagesActivity extends ActionBarActivity {
             builder.append(FILTER_IMG_COLOR).append(settings.getColorFilter());
         if(settings.getImageType().isEmpty() == false)
             builder.append(FILTER_IMG_TYPE).append(settings.getImageType());
-
+        if(settings.getSiteFilter().isEmpty() == false)
+            builder.append(FILTER_SITE).append(settings.getSiteFilter());
         builder.append(CURSOR_POSITION).append(cursorStart);
 
+        Log.i("Search String", builder.toString());
         return builder.toString();
     }
 

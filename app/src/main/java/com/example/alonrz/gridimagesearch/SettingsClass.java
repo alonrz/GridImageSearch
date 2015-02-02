@@ -24,7 +24,7 @@ public class SettingsClass implements Serializable {
     }
 
     public void setImageSize(String imageSize) {
-        this.imageSize = imageSize;
+        this.imageSize = (imageSize.toLowerCase().equals("any"))? "" : imageSize;
     }
 
     public String getColorFilter() {
@@ -32,7 +32,7 @@ public class SettingsClass implements Serializable {
     }
 
     public void setColorFilter(String colorFilter) {
-        this.colorFilter = colorFilter;
+        this.colorFilter = (colorFilter.toLowerCase().equals("any"))? "":colorFilter;
     }
 
     public String getImageType() {
@@ -40,7 +40,7 @@ public class SettingsClass implements Serializable {
     }
 
     public void setImageType(String imageType) {
-        this.imageType = imageType;
+        this.imageType  = (imageType.toLowerCase().equals("any"))?"": imageType;
     }
 
     public String getSiteFilter() {
@@ -48,7 +48,7 @@ public class SettingsClass implements Serializable {
     }
 
     public void setSiteFilter(String siteFilter) {
-        this.siteFilter = siteFilter;
+        this.siteFilter = siteFilter.replaceAll("\\s+", "");
     }
 
     @Override
