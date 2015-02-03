@@ -160,7 +160,12 @@ public class ImagesActivity extends ActionBarActivity {
                 super.onSuccess(statusCode, headers, response);
                 Log.i("PicturesActivity", "JSON received successfully");
                 loadImagesFromJson(response);
-                adapter.notifyDataSetChanged();
+                ImagesActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
 
             @Override
@@ -200,6 +205,7 @@ public class ImagesActivity extends ActionBarActivity {
             {
                 JSONObject image = results.getJSONObject(i);
                 mImagesUrls.add(image.getString("url"));
+
             }
         }
         catch (JSONException e)
