@@ -2,6 +2,7 @@ package com.example.alonrz.gridimagesearch;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.View;
@@ -51,9 +52,10 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
+            imageView.setBackgroundColor(Color.BLACK);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(7, 7, 7, 7);
         } else {
             imageView = (ImageView) convertView;
         }

@@ -2,10 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="5dp"
+
     tools:context=".PicturesActivity">
 
     <com.etsy.android.grid.StaggeredGridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,6 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         app:column_count_portrait="2"
+        android:background="@color/background"
         app:item_margin="8dp"
 
         />
