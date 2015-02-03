@@ -36,9 +36,12 @@ public class ImageActivity extends ActionBarActivity {
 
         imageUrl = getIntent().getStringExtra("url");
         ivImage = (TouchImageView) findViewById(R.id.ivImage);
+
+
         Picasso.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.loading_image)
+                .transform(new SameRatioTransformation(1, this))
                 .into(ivImage);
     }
 
