@@ -33,6 +33,6 @@ User stories (Optional):
  
 
 
-![Video Walkthrough](GridImageSearchAppWalkthough.gif)
+![Video Walkthrough](GridImageSearchAppWalkthough2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
