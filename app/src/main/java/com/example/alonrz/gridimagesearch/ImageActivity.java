@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.ortiz.touch.TouchImageView;
 import com.squareup.picasso.Picasso;
@@ -38,10 +39,9 @@ public class ImageActivity extends ActionBarActivity {
         ivImage = (TouchImageView) findViewById(R.id.ivImage);
 
 
-        Picasso.with(this)
+        Picasso.with(ImageActivity.this)
                 .load(imageUrl)
                 .placeholder(R.drawable.loading_image)
-                .transform(new SameRatioTransformation(1, this))
                 .into(ivImage);
     }
 
@@ -127,6 +127,7 @@ public class ImageActivity extends ActionBarActivity {
             out.close();
             bmpUri = Uri.fromFile(file);
         } catch (IOException e) {
+            Toast.makeText(this, "Error sharing. Try later", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return bmpUri;
